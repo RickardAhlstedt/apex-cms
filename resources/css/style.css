@@ -1,0 +1,33 @@
+#admin #content,
+#admin #sidenav {
+    position: relative;
+    top: 80px;
+}
+
+#loader {
+    width: 100%;
+    max-width: 100%;
+    height: 6px;
+    background: #e1e4e8;
+    overflow: hidden;
+    position: absolute;
+}
+#loader > .loader-bar {
+    display: block;
+    height: 100%;
+    /* background: linear-gradient(90deg,#ffd33d,#ea4aaa 17%,#b34bff 34%,#01feff 51%,#ffd33d 68%,#ea4aaa 85%,#b34bff); */
+    background: linear-gradient(90deg,#6c6acd,#af6bb4 50%, #6c6acd);
+    background-size: 300% 100%;
+    animation: progress-animation 2s linear infinite;
+}
+
+
+@keyframes progress-animation {
+    from {
+        background-position: 100%;
+    }
+    to {
+        background-position: 0;
+    }
+
+}

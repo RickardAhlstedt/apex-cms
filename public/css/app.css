@@ -1,0 +1,3 @@
+/* Import the MDB-files from the current directory */
+@import './mdb.min.css';
+@import './style.css';
