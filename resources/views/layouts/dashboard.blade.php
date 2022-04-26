@@ -43,6 +43,7 @@
                         @include( 'components.sidebar-dash' )
                     </div>
                     <div class="col-md-10" id="content">
+                        @include( 'partials.notification')
                         @yield('content')
                     </div>
                 </div>
