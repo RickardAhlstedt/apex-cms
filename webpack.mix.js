@@ -20,7 +20,7 @@ mix.copyDirectory('vendor/tinymce/tinymce', 'public/js/tinymce');
 // // Copy all the files from the resources/js/ to the public/js/
 // mix.copyDirectory('resources/js/', 'public/js/');
 // // Copy all the files from the resources/css/ to the public/css/
-mix.copyDirectory('resources/css/', 'public/css/');
+// mix.copyDirectory('resources/css/', 'public/css/');
 // // Copy all the files from the resources/images/ to the public/images/
 mix.copyDirectory('resources/images/', 'public/images/');
 

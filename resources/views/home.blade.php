@@ -2,6 +2,10 @@
 
 @section('content')
 
+@push( 'scripts' )
+    @include( 'components.head.tinymce-config' )
+@endpush
+
 <div class="card">
     <div class="card-header">{{ __('Dashboard') }}</div>
 
@@ -13,6 +17,7 @@
         @endif
 
         {{ __('You are logged in!') }}
+        @method( 'DELETE' )
     </div>
 </div>
 
