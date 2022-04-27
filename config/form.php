@@ -3,6 +3,7 @@
 return [
     'classes' => [
         'comment' => App\Models\Comments\Comment::class,
+        'user' => App\Models\User::class,
     ],
     'decorator' => 'mdbootstrap',
     'decorators' => [

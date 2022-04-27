@@ -23,6 +23,10 @@ Auth::routes();
 
 Route::group(['middleware' => 'role:admin'], function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.home');
+
+    Route::get( '/admin/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get( '/admin/users/create', [AdminController::class, 'createUser'])->name('admin.users.create');
+
 } );
 
 Route::group(['middleware' => 'role:user'], function() {

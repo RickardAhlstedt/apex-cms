@@ -2063,7 +2063,7 @@ module.exports = {
 jQuery(function ($) {
   $(document).pjax('[data-pjax], a[data-pjax]', '#content');
   $(document).on('submit', 'form[data-pjax]', function (event) {
-    $.pjax.submit(event, '#pjax-container');
+    $.pjax.submit(event, '#content');
   });
   $("#loader").css("top", $("#main-navbar").outerHeight() + "px");
   $("#loader").slideUp();
@@ -2072,6 +2072,10 @@ jQuery(function ($) {
   });
   $(document).on('pjax:complete', function () {
     $('#loader').slideUp();
+  });
+  $("body#admin a.sidenav-link").on('click', function (e) {
+    $("body#admin a.sidenav-link.active").removeClass("active");
+    $(this).addClass("active");
   });
 });
 window.Notifications = {

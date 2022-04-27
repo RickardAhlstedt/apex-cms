@@ -178,6 +178,8 @@ return [
         App\Providers\FunctionsServiceProvider::class,
         App\Providers\FormRenderProvider::class,
 
+        Barryvdh\Debugbar\ServiceProvider::class,
+
     ],
 
     /*

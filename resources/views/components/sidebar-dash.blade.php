@@ -2,7 +2,7 @@
 <div id="sidenav" data-mdb-color="dark" role="navigation">
     <ul class="sidenav-menu">
       <li class="sidenav-item">
-        <a class="sidenav-link active">
+        <a class="sidenav-link" href="{{ route('admin.home') }}" data-pjax>
           <i class="fas fa-home fa-fw me-3"></i><span>Dashboard</span>
         </a>
       </li>
@@ -17,7 +17,7 @@
         </a>
       </li>
       <li class="sidenav-item">
-        <a class="sidenav-link">
+        <a class="sidenav-link" href="{{ route('admin.users') }}" data-pjax>
             <i class="fas fa-user fa-fw me-3"></i></i><span>Users</span>
         </a>
       </li>
