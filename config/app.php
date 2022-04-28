@@ -177,6 +177,7 @@ return [
 
         App\Providers\FunctionsServiceProvider::class,
         App\Providers\FormRenderProvider::class,
+        App\Providers\MenuRenderProvider::class,
 
         Barryvdh\Debugbar\ServiceProvider::class,
 

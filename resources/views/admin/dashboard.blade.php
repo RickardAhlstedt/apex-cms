@@ -12,7 +12,7 @@
     <div class="card-header">{{ __('Dashboard') }}</div>
 
     <div class="card-body">
-
+        @menu( 'admin' )
     </div>
 </div>
 
