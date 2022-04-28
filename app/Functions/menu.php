@@ -15,7 +15,7 @@ if( !function_exists( 'menu' ) ) {
             $oRender->buildMenu( $parent, $depth, $sGroup );
             $sMenu = ob_get_clean();
 
-            Cache::put( 'menu_' . $sGroup . '_' . $depth . '_' . $parent, $sMenu, 60 );
+            Cache::put( 'menu_' . $sGroup . '_' . $depth . '_' . $parent, $sMenu );
         }
 
         echo $sMenu;
