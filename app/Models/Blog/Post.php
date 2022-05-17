@@ -2,6 +2,7 @@
 
 namespace App\Models\Blog;
 
+use App\Models\User;
 use App\Traits\HasLikes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

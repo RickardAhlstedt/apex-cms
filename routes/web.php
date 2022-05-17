@@ -27,6 +27,11 @@ Route::group(['middleware' => 'role:admin'], function () {
     Route::get( '/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get( '/admin/users/create', [AdminController::class, 'createUser'])->name('admin.users.create');
 
+    Route::get( '/admin/posts', [AdminController::class, 'posts'])->name('admin.posts');
+    Route::get( '/admin/posts/create', [AdminController::class, 'createPost'])->name('admin.posts.create');
+
+    Route::post( '/admin/posts/create', [AdminController::class, 'storePost'])->name('admin.posts.store');
+
 } );
 
 Route::group(['middleware' => 'role:user'], function() {

@@ -20,8 +20,32 @@ jQuery( function( $ ) {
         $(this).addClass("active");
     } );
 
+    $("body#admin.create_posts").on( 'click', 'a.addBlock', function(e) {
+        window.cloneBlock( $, e );
+    } );
+
+    $("body#admin.create_posts").on( 'click', '.block a.removeBlock', function(e) {
+        // Remove the block
+        $(this).parent().parent().remove();
+    } );
+
 } );
 
+window.cloneBlock = function ( $, e ) {
+    e.preventDefault();
+    // Get the block-count
+    var blockCount = $(".block").length;
+    console.log( blockCount );
+    // Copy the element with class blockTemplate
+    $(".blockTemplate").clone().appendTo("#blocks").removeClass("d-none").removeClass("blockTemplate").addClass("block mb-3").attr("id", "block-" + blockCount);
+    // Make sure that tiny is can be initialized for the new block
+    var res = tinymce.init( {
+        selector: '#block-' + blockCount + ' .block-content',
+        plugins: 'code table lists',
+        toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+    } );
+    console.log( res );
+};
 window.Notifications = {
     SUCCESS: "success",
     WARNING: "warning",
