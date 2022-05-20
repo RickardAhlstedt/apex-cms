@@ -49,6 +49,7 @@
         <script src="https://kit.fontawesome.com/2f7a4e69cd.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.4/dist/simple-notify.min.js"></script>
+        <!-- MDB -->
         <script src="{{ asset( 'js/mdb.min.js' ) }}" defer></script>
         <script src="{{ asset('js/app.js') }}" defer></script>
         @stack( 'scripts' )

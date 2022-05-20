@@ -119,6 +119,9 @@ class AdminController extends Controller {
     public function storePost( Request $oRequest ) {
         $oPost = new Post();
 
+        $aBlocks = $oRequest->input( 'blocks' );
+        dd($aBlocks);
+
         $aPostData = $oRequest->only( [
             'title',
             'status',
@@ -134,8 +137,7 @@ class AdminController extends Controller {
         $oPost->save();
 
         $iPostId = $oPost->id;
-        $aBlocks = $oRequest->input( 'blocks' );
-        dd($aBlocks);
+
         // Create blocks for this post
         foreach( $aBlocks as $aBlock ) {
             $oBlock = new \App\Models\Blog\Block();

@@ -26,20 +26,13 @@
                             <label for="title" class="form-label">Title</label>
                         </div>
 
-                        <div id="blocks">
-                            {{-- Tiny and block-controller --}}
-                            <div class="blockTemplate d-none">
-                                <textarea id="block[]" class="block-content"></textarea>
-                                <div class="blockTools mt-3 right-align">
-                                    <a href="#" class="btn btn-primary btn-floating mx-2 addBlock"><i class="fas fa-plus"></i></a>
-                                    <a href="#" class="btn btn-danger btn-floating removeBlock"><i class="fas fa-trash"></i></a>
-                                </div>
-                            </div>
-
+                        <div id="blocks-list">
                             <div class="genesis">
                                 @include( 'components.forms.tinymce-editor', [ 'id' => 'blocks[]', 'content' => '', 'class' => 'blockContent' ] )
                                 <div class="blockTools mt-3 right-align">
-                                    <a href="#" class="btn btn-primary btn-floating mx-2 addBlock"><i class="fas fa-plus"></i></a>
+                                    <button type="button" class="btn btn-primary btn-floating mx-2 add-block" data-mdb-toggle="modal" data-mdb-target="#blockModal">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -85,5 +78,41 @@
             </div>
         </div>
     </div>
+    <input type="hidden" name="blocktypes" id="blocktypes">
 </form>
+
+<div class="modal fade" id="blockModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Select block-type</h5>
+                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col col-md-6">
+                        <a href="#" data-block="text" data-target="#blocks-list" class="btn btn-primary d-block inject-block">Texteditor</a>
+                    </div>
+                    <div class="col col-md-6">
+                        <a href="#" data-block="image" data-target="#blocks-list" class="btn btn-primary d-block inject-block">Image</a>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col col-md-6">
+                        <a href="#" data-block="embed" data-target="#blocks-list" class="btn btn-primary d-block inject-block">Embed</a>
+                    </div>
+                    <div class="col col-md-6">
+                        <a href="#" data-block="raw" data-target="#blocks-list" class="btn btn-primary d-block inject-block">Raw</a>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col col-md-12">
+                        <a href="#" data-block="code" data-target="#blocks-list" class="btn btn-primary d-block inject-block">Code</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection

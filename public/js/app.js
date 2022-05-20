@@ -2077,14 +2077,39 @@ jQuery(function ($) {
     $("body#admin a.sidenav-link.active").removeClass("active");
     $(this).addClass("active");
   });
-  $("body#admin.create_posts").on('click', 'a.addBlock', function (e) {
-    window.cloneBlock($, e);
-  });
-  $("body#admin.create_posts").on('click', '.block a.removeBlock', function (e) {
-    // Remove the block
-    $(this).parent().parent().remove();
+  $("body#admin.create_posts").on('click', 'a.inject-block', function (e) {
+    e.preventDefault();
+    var type = $(this).data("block");
+    var target = $(this).data("target"); // Get the block-count
+
+    var blockCount = $(".block").length; // Fetch the block template with axios
+
+    axios.get("/api/v1/admin/blocks/template/" + type).then(function (response) {
+      var template = response.data;
+      console.log("Got template: " + template); // Replace the placeholder with the block count
+
+      template = template.replace(/{block-count}/g, blockCount); // Append the template to the target
+
+      $(target).append(template);
+      console.log("Appended template to target");
+
+      if (type == "text") {
+        console.log("Text block");
+        window.initTinyMCE('.block-content-' + blockCount);
+        console.log("Done initializing tinymce");
+      }
+    });
   });
 });
+
+window.initTinyMCE = function (selector) {
+  res = tinymce.init({
+    selector: selector,
+    plugins: 'code table lists',
+    toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+  });
+  console.log(res);
+};
 
 window.cloneBlock = function ($, e) {
   e.preventDefault(); // Get the block-count
@@ -2092,11 +2117,11 @@ window.cloneBlock = function ($, e) {
   var blockCount = $(".block").length;
   console.log(blockCount); // Copy the element with class blockTemplate
 
-  $(".blockTemplate").clone().appendTo("#blocks").removeClass("d-none").removeClass("blockTemplate").addClass("block mb-3").attr("id", "block-" + blockCount); // Make sure that tiny is can be initialized for the new block
+  $(".blockTemplate").clone().appendTo("#blocks-list").removeClass("d-none").removeClass("blockTemplate").addClass("block mb-3").attr("id", "block-" + blockCount); // Make sure that tiny is can be initialized for the new block
 
   var res = tinymce.init({
-    selector: '#block-' + blockCount + ' .block-content',
-    plugins: 'code table lists',
+    selector: '#blocks-' + blockCount + ' .block-content',
+    plugins: ['code', 'table', 'lists'],
     toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
   });
   console.log(res);
