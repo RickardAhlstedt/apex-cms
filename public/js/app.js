@@ -2073,6 +2073,22 @@ jQuery(function ($) {
   $(document).on('pjax:complete', function () {
     $('#loader').slideUp();
   });
+  $("body#admin.create_posts form.create-post").on("submit", function (e) {
+    e.preventDefault();
+    var form = $(this); // Get all the blocks by id blocks[]
+
+    var blocks = [];
+    $(".block").each(function (index, element) {
+      var block = {};
+      block.id = $(element).attr("id");
+      block.type = $(element).attr("data-type");
+      block.content = $(element).find(".block-content").html();
+      blocks.push(block);
+    }); // Insert a json-array of blocks into the form
+
+    $("input#blocktypes").val(JSON.stringify(blocks)); // Submit the form
+    // form.submit();
+  });
   $("body#admin a.sidenav-link").on('click', function (e) {
     $("body#admin a.sidenav-link.active").removeClass("active");
     $(this).addClass("active");

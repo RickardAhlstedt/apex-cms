@@ -10,7 +10,7 @@
 
 @section( 'content' )
 
-<form action="{{ route( 'admin.posts.store' ) }}" method="POST">
+<form action="{{ route( 'admin.posts.store' ) }}" method="POST" class="create-post">
     @csrf
 
     <div class="container-fluid">
@@ -28,7 +28,7 @@
 
                         <div id="blocks-list">
                             <div class="genesis">
-                                @include( 'components.forms.tinymce-editor', [ 'id' => 'blocks[]', 'content' => '', 'class' => 'blockContent' ] )
+                                @include( 'components.forms.tinymce-editor', [ 'id' => 'blocks[]', 'content' => '', 'class' => 'blockContent block genesis', 'type' => 'text', 'count' => 0 ] )
                                 <div class="blockTools mt-3 right-align">
                                     <button type="button" class="btn btn-primary btn-floating mx-2 add-block" data-mdb-toggle="modal" data-mdb-target="#blockModal">
                                         <i class="fas fa-plus"></i>
