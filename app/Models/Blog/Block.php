@@ -12,6 +12,7 @@ class Block extends Model
 
     protected $fillable = [
         'post_id',
+        'type',
         'name',
         'content',
         'visibility',

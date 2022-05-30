@@ -120,7 +120,8 @@ class AdminController extends Controller {
         $oPost = new Post();
 
         $aBlocks = $oRequest->input( 'blocks' );
-        dd($aBlocks);
+        $aBlockTypes = $oRequest->input( 'blocktypes' );
+        dd($aBlocks, $aBlockTypes );
 
         $aPostData = $oRequest->only( [
             'title',
@@ -145,6 +146,7 @@ class AdminController extends Controller {
                 'post_id' => $iPostId,
                 'name' => '',
                 'content' => $aBlock['content'],
+                'type' => 'text'
             ];
         }
 

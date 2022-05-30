@@ -65,6 +65,21 @@ code[class*=language-],pre[class*=language-]{color:#000;background:none;text-sha
             animation: progress-animation 2s linear infinite;
 }
 
+.blockrow {
+    position: relative;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+}
+.blockrow .blockTools {
+    display: flex;
+    flex-direction: column;
+}
+
+.ck.ck-editor {
+    width: 100% !important;
+    margin-right: 20px !important;
+}
 
 @-webkit-keyframes progress-animation {
     from {
@@ -75,7 +90,6 @@ code[class*=language-],pre[class*=language-]{color:#000;background:none;text-sha
     }
 
 }
-
 
 @keyframes progress-animation {
     from {

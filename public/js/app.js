@@ -2073,20 +2073,21 @@ jQuery(function ($) {
   $(document).on('pjax:complete', function () {
     $('#loader').slideUp();
   });
-  $("body#admin.create_posts form.create-post").on("submit", function (e) {
+  $("body#admin.create_posts form.create-post").one("submit", function (e) {
     e.preventDefault();
     var form = $(this); // Get all the blocks by id blocks[]
 
     var blocks = [];
     $(".block").each(function (index, element) {
       var block = {};
-      block.id = $(element).attr("id");
-      block.type = $(element).attr("data-type");
-      block.content = $(element).find(".block-content").html();
+      block.id = $(element).attr("data-count");
+      block.type = $(element).attr("data-type"); // block.content = $(this).summernote("code");
+
       blocks.push(block);
     }); // Insert a json-array of blocks into the form
 
-    $("input#blocktypes").val(JSON.stringify(blocks)); // Submit the form
+    $("input#blocktypes").val(JSON.stringify(blocks));
+    console.log(JSON.stringify(blocks)); // Submit the form
     // form.submit();
   });
   $("body#admin a.sidenav-link").on('click', function (e) {
@@ -2110,37 +2111,26 @@ jQuery(function ($) {
       console.log("Appended template to target");
 
       if (type == "text") {
-        console.log("Text block");
-        window.initTinyMCE('.block-content-' + blockCount);
-        console.log("Done initializing tinymce");
+        window.addEditor("#blocks-" + blockCount);
       }
-    });
+    }); // Close the modal
+
+    $(this).closest(".modal").modal("hide");
+  });
+  $("body#admin.create_posts").on('click', 'a.remove-block', function (e) {
+    e.preventDefault();
+    var target = $(this).data("target");
+    console.log(target);
+    $("#" + target).remove();
   });
 });
 
-window.initTinyMCE = function (selector) {
-  res = tinymce.init({
-    selector: selector,
-    plugins: 'code table lists',
-    toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+window.addEditor = function (id) {
+  ClassicEditor.create(document.querySelector(id), {
+    removePlugins: ['EasyImage']
+  })["catch"](function (error) {
+    console.log(error);
   });
-  console.log(res);
-};
-
-window.cloneBlock = function ($, e) {
-  e.preventDefault(); // Get the block-count
-
-  var blockCount = $(".block").length;
-  console.log(blockCount); // Copy the element with class blockTemplate
-
-  $(".blockTemplate").clone().appendTo("#blocks-list").removeClass("d-none").removeClass("blockTemplate").addClass("block mb-3").attr("id", "block-" + blockCount); // Make sure that tiny is can be initialized for the new block
-
-  var res = tinymce.init({
-    selector: '#blocks-' + blockCount + ' .block-content',
-    plugins: ['code', 'table', 'lists'],
-    toolbar: 'undo redo | formatselect| bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
-  });
-  console.log(res);
 };
 
 window.Notifications = {

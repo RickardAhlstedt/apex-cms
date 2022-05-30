@@ -5,8 +5,13 @@
 @section( 'body_class' ) create_posts @endsection
 
 @push( 'scripts' )
-    @include( 'components.head.tinymce-config', [ 'class' => 'blockContent' ] )
+    <script>
+        ClassicEditor.create( document.querySelector("#blocks-0"), {
+
+        } ).catch( error => { console.log( error ) })
+    </script>
 @endpush
+
 
 @section( 'content' )
 
@@ -27,10 +32,10 @@
                         </div>
 
                         <div id="blocks-list">
-                            <div class="genesis">
-                                @include( 'components.forms.tinymce-editor', [ 'id' => 'blocks[]', 'content' => '', 'class' => 'blockContent block genesis', 'type' => 'text', 'count' => 0 ] )
-                                <div class="blockTools mt-3 right-align">
-                                    <button type="button" class="btn btn-primary btn-floating mx-2 add-block" data-mdb-toggle="modal" data-mdb-target="#blockModal">
+                            <div class="genesis blockrow">
+                                <textarea id="blocks-0" class="block-content-0 block genesis" data-type="text" data-count="0" name="blocks[]"></textarea>
+                                <div class="blockTools">
+                                    <button type="button" class="btn btn-primary btn-floating my-2 add-block" data-mdb-toggle="modal" data-mdb-target="#blockModal">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>

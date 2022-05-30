@@ -12,8 +12,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
-        "spatie/laravel-pjax": "^2.2",
-        "tinymce/tinymce": "^6.0"
+        "spatie/laravel-pjax": "^2.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
