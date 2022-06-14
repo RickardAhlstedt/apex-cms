@@ -4,6 +4,7 @@
 
 @section( 'body_class' ) create_posts @endsection
 
+
 @push( 'scripts' )
     <script>
         ClassicEditor.create( document.querySelector("#blocks-0"), {

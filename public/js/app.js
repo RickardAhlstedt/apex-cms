@@ -2058,10 +2058,18 @@ module.exports = {
 /*!******************************!*\
   !*** ./resources/js/apex.js ***!
   \******************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var _require = __webpack_require__(/*! axios */ "./node_modules/axios/index.js"),
+    axios = _require["default"];
 
 jQuery(function ($) {
   $(document).pjax('[data-pjax], a[data-pjax]', '#content');
+  $(document).on('submit', 'form[data-pjax-no-push]', function (event) {
+    $.pjax.submit(event, '#content', {
+      push: false
+    });
+  });
   $(document).on('submit', 'form[data-pjax]', function (event) {
     $.pjax.submit(event, '#content');
   });
@@ -2072,6 +2080,15 @@ jQuery(function ($) {
   });
   $(document).on('pjax:complete', function () {
     $('#loader').slideUp();
+    $(".form-outline").each(function () {
+      new mdb.Input($(this)[0]).init();
+    });
+  });
+  $("body#admin.images_edit a.delete-image").on("click", function (e) {
+    e.preventDefault();
+    var target = $(this).data('target');
+    var form = $("form" + target);
+    form.submit();
   });
   $("body#admin.create_posts form.create-post").one("submit", function (e) {
     e.preventDefault();
@@ -2113,9 +2130,45 @@ jQuery(function ($) {
       if (type == "text") {
         window.addEditor("#blocks-" + blockCount);
       }
+
+      if (type == "code") {}
     }); // Close the modal
 
     $(this).closest(".modal").modal("hide");
+  });
+  $("body#admin.images_grid form.add-folder").on("submit", function (e) {
+    e.preventDefault();
+    var form = $(this);
+    axios.post("/api/v1/admin/images/folders", form.serialize()).then(function (response) {
+      console.log(response);
+
+      if (response.data.success) {
+        notify("success", "Success", "Folder created");
+      } else {
+        notify("error", "Error", response.data.message);
+      }
+    })["catch"](function (error) {
+      notify("error", "Error", error.response.data.message);
+    });
+  });
+  $("body#admin.images_grid button.folder-sync").on("click", function (e) {
+    axios.get("/api/v1/admin/images/folders").then(function (response) {
+      console.log(response);
+
+      if (response.data.success) {
+        notify("success", "Success", "Folders synced"); // Get all the folders from the response, and build a list
+
+        var folders = response.data.folders;
+        var list = "";
+
+        for (var i = 0; i < folders.length; i++) {
+          list += "<a href='/admin/images?folder=" + folders[i].name + "'><i class='fas fa-folder'></i> " + folders[i].name + "</a>";
+        } // Replace the list with the new list
+
+
+        $("#folders-list").html(list);
+      }
+    });
   });
   $("body#admin.create_posts").on('click', 'a.remove-block', function (e) {
     e.preventDefault();
@@ -2186,14 +2239,29 @@ __webpack_require__(/*! ./apex.js */ "./resources/js/apex.js");
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+
+window.getCookie = function (name) {
+  var value = "; ".concat(document.cookie);
+  var parts = value.split("; ".concat(name, "="));
+
+  if (parts.length === 2) {
+    var cValue = parts.pop().split(';').shift();
+    return cValue.replace('%7C', '|');
+  }
+};
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'; // Get the jwt-token from the cookies
+
+var jwtToken = window.getCookie('admin_jwt');
+console.log(jwtToken);
+window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + jwtToken;
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

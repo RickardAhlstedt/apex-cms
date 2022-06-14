@@ -16,7 +16,6 @@ mix.js('resources/js/app.js', 'public/js')
         //
     ])
     .js('resources/js/mdb.min.js', 'public/js');
-mix.copyDirectory('vendor/tinymce/tinymce', 'public/js/tinymce');
 // // Copy all the files from the resources/js/ to the public/js/
 // mix.copyDirectory('resources/js/', 'public/js/');
 // // Copy all the files from the resources/css/ to the public/css/

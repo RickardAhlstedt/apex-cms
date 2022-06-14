@@ -1,5 +1,11 @@
+const { default: axios } = require("axios");
+
 jQuery( function( $ ) {
     $(document).pjax('[data-pjax], a[data-pjax]', '#content');
+
+    $(document).on( 'submit', 'form[data-pjax-no-push]', function(event) {
+        $.pjax.submit(event, '#content', { push: false } )
+    } );
 
     $(document).on( 'submit', 'form[data-pjax]', function(event) {
         $.pjax.submit(event, '#content')
@@ -13,6 +19,17 @@ jQuery( function( $ ) {
     } );
     $(document).on( 'pjax:complete', function() {
         $('#loader').slideUp()
+        $(".form-outline").each( function() {
+            new mdb.Input($(this)[0]).init();
+        } );
+    } );
+
+    $("body#admin.images_edit a.delete-image").on( "click", function(e) {
+        e.preventDefault();
+        var target = $(this).data('target');
+
+        var form = $("form" + target);
+        form.submit();
     } );
 
     $("body#admin.create_posts form.create-post").one( "submit", function( e ) {
@@ -64,9 +81,45 @@ jQuery( function( $ ) {
             if( type == "text" ) {
                 window.addEditor( "#blocks-" + blockCount );
             }
+            if( type == "code" ) {
+
+            }
         } );
         // Close the modal
         $(this).closest(".modal").modal("hide");
+    } );
+
+    $("body#admin.images_grid form.add-folder").on( "submit", function(e) {
+        e.preventDefault();
+        let form = $(this);
+
+        axios.post( "/api/v1/admin/images/folders", form.serialize() ).then( function( response ) {
+            console.log( response );
+            if( response.data.success ) {
+                notify( "success", "Success", "Folder created" );
+            } else {
+                notify( "error", "Error", response.data.message );
+            }
+        } ).catch( error => {
+            notify( "error", "Error", error.response.data.message );
+        } );
+    } );
+
+    $("body#admin.images_grid button.folder-sync").on( "click", function(e) {
+        axios.get( "/api/v1/admin/images/folders" ).then( function( response ) {
+            console.log( response );
+            if( response.data.success ) {
+                notify( "success", "Success", "Folders synced" );
+                // Get all the folders from the response, and build a list
+                let folders = response.data.folders;
+                let list = "";
+                for( let i = 0; i < folders.length; i++ ) {
+                    list += "<a href='/admin/images?folder=" + folders[i].name + "'><i class='fas fa-folder'></i> " + folders[i].name + "</a>";
+                }
+                // Replace the list with the new list
+                $("#folders-list").html( list );
+            }
+        } );
     } );
 
     $("body#admin.create_posts").on( 'click', 'a.remove-block', function(e) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog\Post;
+use App\Models\Images\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -121,7 +122,7 @@ class AdminController extends Controller {
 
         $aBlocks = $oRequest->input( 'blocks' );
         $aBlockTypes = $oRequest->input( 'blocktypes' );
-        dd($aBlocks, $aBlockTypes );
+        dd( $oRequest->all() );
 
         $aPostData = $oRequest->only( [
             'title',
@@ -149,6 +150,182 @@ class AdminController extends Controller {
                 'type' => 'text'
             ];
         }
+
+    }
+
+    public function images( Request $oRequest ) {
+        if( $oRequest->has( 'per_page' ) && $oRequest->input( 'per_page' ) > 0 && ctype_digit( $oRequest->input( 'per_page' ) ) ) {
+            $iPerPage = $oRequest->input( 'per_page' );
+        } else {
+            $iPerPage = 10;
+        }
+
+        if( $oRequest->has( 'search' ) && $oRequest->input( 'search' ) != '' ) {
+            $this->setPageTitle( 'Searching for: ' . $oRequest->input( 'search' ) );
+            $oImage = new Image();
+            $oQuery = $oImage->newQuery();
+            $oQuery->where( 'name', 'like', '%' . $oRequest->input( 'search' ) . '%' );
+            $oQuery->orWhere( 'filename', 'like', '%' . $oRequest->input( 'search' ) . '%' );
+
+            $aImages = $oQuery->paginate($iPerPage);
+        } else {
+            $this->setPageTitle( 'Images' );
+
+            $oImage = new Image();
+            $oQuery = $oImage->newQuery();
+
+            $aImages = $oQuery->paginate($iPerPage);
+        }
+
+        return view( 'admin.images.index', [
+            'images' => $aImages->withPath( route('admin.images.index')),
+            'folders' => getMediaFolders()
+        ] );
+    }
+
+    public function showImage( Request $oRequest, int $iImageId ) {
+        $oImage = Image::find( $iImageId );
+        if( $oImage ) {
+            $this->setPageTitle( 'Image: ' . $oImage->name );
+            return view( 'admin.images.edit', [
+                'image' => $oImage
+            ] );
+        } else {
+            return redirect( route('admin.images.index') );
+        }
+    }
+
+    public function storeImage( Request $oRequest ) {
+        $oImage = $oRequest->file( 'image' );
+
+
+        $sFileName = $oImage->getClientOriginalName();
+        $sName = pathinfo($sFileName, PATHINFO_FILENAME);
+        $sFileName = cleanFileName( $sFileName );
+        $sExtension = $oImage->getClientOriginalExtension();
+
+        $sMime = $oImage->getClientMimeType();
+        $sSize = $oImage->getSize();
+
+        $oImage->move( public_path('uploads'), $sFileName );
+
+        $oImage = new Image();
+        $oImage->fill( [
+            'name' => $sName,
+            'filename' => $sFileName,
+            'folder' => 'uploads/',
+            'extension' => $sExtension,
+            'mime' => $sMime,
+            'size' => $sSize
+        ] );
+        $oImage->save();
+
+        if( $oRequest->has( 'per_page' ) && $oRequest->input( 'per_page' ) > 0 && ctype_digit( $oRequest->input( 'per_page' ) ) ) {
+            $iPerPage = $oRequest->input( 'per_page' );
+        } else {
+            $iPerPage = 10;
+        }
+
+        $this->setPageTitle( 'Images' );
+
+        $oImage = new Image();
+        $oQuery = $oImage->newQuery();
+
+        $aImages = $oQuery->paginate($iPerPage);
+
+        $this->setFlashMessage( 'Image uploaded successfully', 'success' );
+        $this->showFlashMessages();
+
+        return view( 'admin.images.index', [
+            'images' => $aImages->withPath( route('admin.images.index')),
+            'folders' => getMediaFolders()
+        ] );
+    }
+
+    public function editImage( Request $oRequest, int $iImageId ) {
+        $oImage = Image::find( $iImageId );
+        if( !$oImage ) {
+            return redirect( route('admin.images.index') );
+        }
+        $sName = $oRequest->input( 'name' );
+        $oImage->name = $sName;
+        $oImage->save();
+
+        $this->setPageTitle( 'Image: ' . $oImage->name );
+
+        $this->setFlashMessage( 'Image updated successfully', 'success' );
+        $this->showFlashMessages();
+
+        return view( 'admin.images.edit', [
+            'image' => $oImage
+        ] );
+    }
+
+    public function deleteImage( Request $oRequest, int $ImageId ) {
+        $oImage = Image::find( $ImageId );
+        if( $oImage ) {
+            $oImage->delete();
+
+            // Remove the file from the filesystem
+            $sFilePath = public_path() . '/' . $oImage->folder . $oImage->filename;
+            if( file_exists( $sFilePath ) ) {
+                unlink( $sFilePath );
+            }
+
+            $this->setFlashMessage( 'Image deleted successfully', 'success' );
+        } else {
+            $this->setFlashMessage( 'Image not found', 'error' );
+        }
+
+        if( $oRequest->has( 'per_page' ) && $oRequest->input( 'per_page' ) > 0 && ctype_digit( $oRequest->input( 'per_page' ) ) ) {
+            $iPerPage = $oRequest->input( 'per_page' );
+        } else {
+            $iPerPage = 10;
+        }
+
+        $this->setPageTitle( 'Images' );
+
+        $oImage = new Image();
+        $oQuery = $oImage->newQuery();
+
+        $aImages = $oQuery->paginate($iPerPage);
+
+        $this->showFlashMessages();
+
+        return view( 'admin.images.index', [
+            'images' => $aImages->withPath( route('admin.images.index')),
+            'folders' => getMediaFolders()
+        ] );
+    }
+
+    public function dropzoneStore( Request $oRequest ) {
+
+        $oImage = $oRequest->file( 'file' );
+
+
+        $sFileName = $oImage->getClientOriginalName();
+        $sName = Str::slug( pathinfo($sFileName, PATHINFO_FILENAME) );
+        $sExtension = $oImage->getClientOriginalExtension();
+
+        $sMime = $oImage->getClientMimeType();
+        $sSize = $oImage->getSize();
+
+        $oImage->move( public_path('uploads'), $sFileName );
+
+        $oImage = new Image();
+        $oImage->fill( [
+            'name' => $sName,
+            'filename' => $sFileName,
+            'folder' => 'uploads/',
+            'extension' => $sExtension,
+            'mime' => $sMime,
+            'size' => $sSize
+        ] );
+        $oImage->save();
+
+        return response()->json( [
+            'success' => $sFileName
+        ] );
 
     }
 

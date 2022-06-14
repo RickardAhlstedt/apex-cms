@@ -6,7 +6,7 @@ if( !function_exists( 'menu' ) ) {
     function menu( $sGroup = 'guest', $depth = 0, $parent = 0 ) {
         $oRender = new \App\Render\Menu();
 
-        if( $sMenu = Cache::get( 'menu_' . $sGroup . '_' . $depth . '_' . $parent ) ) {
+        if( $sMenu = Cache::get( 'menu_' . $sGroup ) ) {
             // $sMenu = Cache::get( 'menu_' . $sGroup . '_' . $depth . '_' . $parent );
             echo $sMenu;
             return;
@@ -15,7 +15,9 @@ if( !function_exists( 'menu' ) ) {
             $oRender->buildMenu( $parent, $depth, $sGroup );
             $sMenu = ob_get_clean();
 
-            Cache::put( 'menu_' . $sGroup . '_' . $depth . '_' . $parent, $sMenu );
+            Cache::put( 'menu_' . $sGroup, $sMenu );
+
+            // Cache::put( 'menu_' . $sGroup . '_' . $depth . '_' . $parent, $sMenu );
         }
 
         echo $sMenu;

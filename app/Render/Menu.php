@@ -48,12 +48,12 @@ class Menu {
                 $sClass = 'navSub';
             }
 
-            echo '<ul class="' . $sClass . '">';
+            echo '<ul class="sidenav-menu">';
 
             // Build a recursive tree from the results
             foreach( $aResult as $aRow ) {
-                echo '<li class="' . $sClass . '">';
-                echo '<a href="' . $aRow->href . '" class="' . $aRow->class . '">';
+                echo '<li class="sidenav-item">';
+                echo '<a href="' . $aRow->href . '" class="sidenav-link ' . $aRow->class . '">';
                 echo $aRow->prefix . $aRow->name . $aRow->suffix;
                 echo '</a>';
 

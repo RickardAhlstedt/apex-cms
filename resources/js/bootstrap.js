@@ -1,5 +1,14 @@
 window._ = require('lodash');
 
+window.getCookie = function(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+        let cValue = parts.pop().split(';').shift();
+        return cValue.replace( '%7C', '|' );
+    }
+  }
+
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
@@ -9,6 +18,12 @@ window._ = require('lodash');
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+// Get the jwt-token from the cookies
+let jwtToken = window.getCookie('admin_jwt');
+console.log( jwtToken );
+
+window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + jwtToken;
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

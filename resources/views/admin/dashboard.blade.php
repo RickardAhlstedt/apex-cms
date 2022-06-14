@@ -5,14 +5,13 @@
 @section('content')
 
 @push( 'scripts' )
-    @include( 'components.head.tinymce-config' )
 @endpush
 
 <div class="card">
     <div class="card-header">{{ __('Dashboard') }}</div>
 
     <div class="card-body">
-        @menu( 'admin' )
+        @menu( 'admin', 0, 0 )
     </div>
 </div>
 

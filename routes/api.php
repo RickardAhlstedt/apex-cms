@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BlockController;
+use App\Http\Controllers\ImageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware( ['auth:sanctum'] )->group( function() {
+    Route::get( 'v1/admin/images/folders', [ ImageController::class, 'getFolders' ] );
+    Route::post( 'v1/admin/images/folders', [ImageController::class, 'createFolder'] );
+} );
 
 Route::get( 'v1/admin/blocks/template/{template}', [BlockController::class, 'getTemplate'] );
 

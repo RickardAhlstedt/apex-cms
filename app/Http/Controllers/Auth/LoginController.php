@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -21,6 +23,17 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+
+    protected function authenticated(Request $request, $user) {
+        // Let's create a token for the user
+        $oToken = $user->createToken( 'admin_jwt', ['*'] );
+        $sToken = $oToken->plainTextToken;
+        Log::debug( 'Token: ' . $sToken );
+        // And set it in the session
+        session( [ 'admin_jwt' => $sToken ] );
+        // And set a cookie with the token
+        setcookie( 'admin_jwt', $sToken, 0, '/' );
+    }
 
     /**
      * Where to redirect users after login.
