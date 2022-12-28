@@ -76,6 +76,10 @@ class AdminController extends Controller {
         ]);
     }
 
+    public function storeUser( Request $oRequest ) {
+
+    }
+
     public function posts( Request $oRequest ) {
         if( $oRequest->has( 'per_page' ) && $oRequest->input( 'per_page' ) > 0 && ctype_digit( $oRequest->input( 'per_page' ) ) ) {
             $iPerPage = $oRequest->input( 'per_page' );

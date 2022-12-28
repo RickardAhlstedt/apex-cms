@@ -15,7 +15,7 @@ class Menu {
     public function buildMenu( $iParentId = 0, int $iDepth = 0, string $sGroup = 'guest') {
         $aResult = DB::select( "
             SELECT
-                a.id, a.parent_id, a.name, a.href, a.class, a.behavior, a.prefix, a.suffix, a.sort, Deriv1.Count
+                a.id, a.parent_id, a.name, a.href, a.class, a.behavior, a.prefix, a.suffix, a.use_pjax, a.sort, Deriv1.Count
             FROM
                 `menus` a
             LEFT OUTER JOIN (
@@ -52,8 +52,11 @@ class Menu {
 
             // Build a recursive tree from the results
             foreach( $aResult as $aRow ) {
+                if( $aRow->use_pjax == 1 ) {
+                    $sPjax = 'data-pjax=""';
+                }
                 echo '<li class="sidenav-item">';
-                echo '<a href="' . $aRow->href . '" class="sidenav-link ' . $aRow->class . '">';
+                echo '<a href="' . $aRow->href . '" class="sidenav-link ' . $aRow->class . '" ' . $sPjax .'>';
                 echo $aRow->prefix . $aRow->name . $aRow->suffix;
                 echo '</a>';
 

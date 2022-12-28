@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\SMS\Book;
+use App\Models\SMS\Contact;
 use App\Traits\CanRenderForm;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -44,51 +46,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $formDictionary = [
-        'name' => [
-            'type' => 'string',
-            'title' => 'Name',
-            'required' => true,
-        ],
-        'email' => [
-            'type' => 'string',
-            'title' => 'Email',
-            'required' => true,
-        ],
-        'password' => [
-            'type' => 'password',
-            'title' => 'Password',
-            'required' => true,
-        ],
-        'password_confirm' => [
-            'type' => 'password',
-            'title' => 'Confirm Password',
-            'required' => true,
-        ],
-        'role' => [
-            'type' => 'select',
-            'title' => 'Role',
-            'values' => [
-                'admin' => 'Admin',
-                'user' => 'User',
-            ],
-            'required' => true,
-            'label' => false,
-        ],
-        'submit' => [
-            'type' => 'button',
-            'title' => 'Submit',
-            'value' => 'submit',
-            'label' => false,
-            'attributes' => [
-                'class' => 'btn-primary'
-            ]
-        ]
-    ];
+    public function contacts() {
+        return $this->hasMany( Contact::class, 'user_id', 'id' );
+    }
 
-    protected $formParams = [
-        'method' => 'post',
-        'labels' => true,
-    ];
+    public function books() {
+        return $this->hasMany( Book::class, 'user_id', 'id' );
+    }
 
 }

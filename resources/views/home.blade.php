@@ -3,7 +3,7 @@
 @section('content')
 
 @push( 'scripts' )
-    @include( 'components.head.tinymce-config' )
+
 @endpush
 
 <div class="card">
